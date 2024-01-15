@@ -14,6 +14,9 @@ import { ProductLineModule } from './modules/product-line/product-line.module';
 import { ProductLineService } from './services/product-line/product-line.service';
 import { ProductLineController } from './controllers/product-line/product-line.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
+import { Product } from './entities/product.entity';
+import { AuthModule } from './auth/auth/auth.module';
 
 @Module({
   imports: [
@@ -21,12 +24,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       type: 'postgres',
       host: 'localhost',
       port: 5432,
-      username: 'root',
+      username: 'postgres',
       password: 'root',
       database: 'product--store--db',
       synchronize: true,
       logging: true,
-      entities: [],
+      entities: [User,Product],
       subscribers: [],
       migrations: [],
     }),
@@ -34,6 +37,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     ProductModule,
     OrderModule,
     ProductLineModule,
+    AuthModule,
   ],
   controllers: [
     AppController,
