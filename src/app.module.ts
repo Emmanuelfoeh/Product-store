@@ -17,22 +17,50 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Product } from './entities/product.entity';
 import { AuthModule } from './auth/auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'root',
-      database: 'product--store--db',
-      synchronize: true,
-      logging: true,
-      entities: [User,Product],
-      subscribers: [],
-      migrations: [],
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration],
+      envFilePath: `.env.dev`,
     }),
+
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: 'localhost',
+          port: 5432,
+          username: config.get<string>('database.username'),
+          password: config.get<string>('database.password'),
+          database: config.get<string>('database.name'),
+          synchronize: true,
+          logging: true,
+          entities: [User, Product],
+          subscribers: [],
+          migrations: [],
+        };
+      },
+    }),
+
+    // TypeOrmModule.forRoot({
+    //   type: 'postgres',
+    //   host: 'localhost',
+    //   port: 5432,
+    //   username: 'postgres',
+    //   password: 'root',
+    //   database: 'product--store--db',
+    //   synchronize: true,
+    //   logging: true,
+    //   entities: [User, Product],
+    //   subscribers: [],
+    //   migrations: [],
+    // }),
+
     UserModule,
     ProductModule,
     OrderModule,
