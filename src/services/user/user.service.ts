@@ -23,17 +23,19 @@ export class UserService {
   async findAll(): Promise<UserDto[]> {
     try {
       const users = await this.repo.find();
+      console.log('all users found', users);
       return users.map((user) => new UserDto(user));
     } catch (error) {
-    //   console.log('error fetching users', error);
+      //   console.log('error fetching users', error);
       throw new Error('error fetching users');
     }
   }
 
-  async findOne(id: number): Promise<UserDto>{
+  async findOne(id: number): Promise<UserDto> {
     const user = await this.repo.findOne({ where: { id } });
+    console.log(' user found', user);
     if (!user) throw new NotFoundException(`user with id: ${id} not found`);
-    let savedUser =  new UserDto(user);
+    let savedUser = new UserDto(user);
     return savedUser;
   }
 
@@ -50,14 +52,14 @@ export class UserService {
       const user = await this.repo.findOne({ where: { id } });
 
       if (!user) throw new NotFoundException(`User with ID ${id} not found`);
-      
 
       const deleteResult = await this.repo.delete(id);
 
-      if (deleteResult.affected === 0) throw new Error(`Failed to delete user with ID ${id}`);
+      if (deleteResult.affected === 0)
+        throw new Error(`Failed to delete user with ID ${id}`);
       return { message: `User with ID ${id} has been deleted successfully` };
     } catch (error) {
-      console.log("the delete error: ", error)
+      console.log('the delete error: ', error);
       throw error;
     }
   }

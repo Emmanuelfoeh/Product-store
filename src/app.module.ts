@@ -19,6 +19,10 @@ import { Product } from './entities/product.entity';
 import { AuthModule } from './auth/auth/auth.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/configuration';
+import { Role } from './entities/role.entity';
+import { RoleService } from './services/role/role/role.service';
+import { RoleModule } from './modules/role/role/role.module';
+import { RoleController } from './controllers/role/role/role.controller';
 
 @Module({
   imports: [
@@ -40,7 +44,7 @@ import configuration from './config/configuration';
           database: config.get<string>('database.name'),
           synchronize: true,
           logging: true,
-          entities: [User, Product],
+          entities: [User,Role, Product],
           subscribers: [],
           migrations: [],
         };
@@ -66,6 +70,7 @@ import configuration from './config/configuration';
     OrderModule,
     ProductLineModule,
     AuthModule,
+    RoleModule,
   ],
   controllers: [
     AppController,
@@ -73,6 +78,7 @@ import configuration from './config/configuration';
     ProductController,
     OrderController,
     ProductLineController,
+    RoleController,
   ],
   providers: [
     AppService,
@@ -80,6 +86,7 @@ import configuration from './config/configuration';
     ProductService,
     OrderService,
     ProductLineService,
+    RoleService,
   ],
 })
 export class AppModule {}

@@ -1,13 +1,16 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { UserRole } from 'src/decorators/role.decorator';
 import { CreateUserDto } from 'src/dtos/user/create-user.dto';
 import { UpdateUserDto } from 'src/dtos/user/update-user.dto';
 import { UserDto } from 'src/dtos/user/user.dto';
+import { Role } from 'src/enums/role.enum';
 import { UserService } from 'src/services/user/user.service';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  // @UserRole(Role.Admin)
   @Post()
   createUser(@Body() body: CreateUserDto) {
     const user = this.userService.createUser(body);
